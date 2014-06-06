@@ -1,6 +1,6 @@
 module Polipus
   module Storage
-    module MysqlStore
+    class MysqlStore < Base
       VERSION = "0.0.1"
     end
   end

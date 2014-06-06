@@ -88,5 +88,18 @@ describe Polipus::Storage::MysqlStore do
     end
   end
 
+  context 'SELECT' do
+    let(:filled_storage) do
+      storage.add page
+      storage
+    end
+
+    it 'should fetch a page' do 
+      p = filled_storage.get page
+      p.should_not be nil
+      puts p
+    end
+
+  end
   
 end

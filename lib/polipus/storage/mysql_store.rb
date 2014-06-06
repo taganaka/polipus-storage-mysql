@@ -25,7 +25,10 @@ module Polipus
       end
 
       def get page
-        nil
+        load_page(
+          @my.query("SELECT * FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}' LIMIT 1", :cast_booleans => true)
+        .first
+        )
       end
 
       def remove page
@@ -88,6 +91,13 @@ module Polipus
               ON DUPLICATE KEY UPDATE
                 fetched_at = UNIX_TIMESTAMP()
           )
+        end
+
+        def load_page hash
+          %w(links user_data).each do |f|
+            hash[f] = Marshal.load(hash[f]) unless hash[f].nil?
+          end
+          Page.from_hash(hash)
         end
     end
   end

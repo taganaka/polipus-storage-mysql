@@ -64,6 +64,17 @@ describe Polipus::Storage::MysqlStore do
       filled_storage.count.should be 0
     end
 
+    it 'should empty the storage' do
+      2.times { |i|
+        p = page.to_hash
+        p['url'] = "#{p['url']}/#{i}"
+        storage.add Polipus::Page.from_hash(p)
+      }
+      filled_storage.count.should be 3
+      filled_storage.clear
+      filled_storage.count.should be 0
+    end
+
   end
 
   context 'UPDATE' do

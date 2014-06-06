@@ -41,6 +41,7 @@ module Polipus
       end
 
       def clear
+        @my.query("DELETE FROM #{@tbl}")
       end
       private
         def setup

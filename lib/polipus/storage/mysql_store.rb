@@ -45,19 +45,6 @@ module Polipus
       end
       private
         def setup
-          # 'url'           => @url.to_s,
-          #        'headers'       => Marshal.dump(@headers),
-          #        'body'          => @body,
-          #        'links'         => links.map(&:to_s), 
-          #        'code'          => @code,
-          #        'depth'         => @depth,
-          #        'referer'       => @referer.to_s,
-          #        'redirect_to'   => @redirect_to.to_s,
-          #        'response_time' => @response_time,
-          #        'fetched'       => @fetched,
-          #        'user_data'     => @user_data.nil? ? {} : @user_data.marshal_dump,
-          #        'fetched_at'    => @fetched_at,
-          #        'error'         => @error
           create_table = %Q(
             CREATE TABLE IF NOT EXISTS #{@tbl} (
               uuid          varchar(32) PRIMARY KEY,

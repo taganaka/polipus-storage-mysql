@@ -75,7 +75,6 @@ module Polipus
               error         varchar(255)
             )
           )
-          puts create_table
           @my.query(create_table)
         end
 

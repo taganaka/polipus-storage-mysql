@@ -1,8 +1,8 @@
-require "spec_helper"
-require "polipus/storage/mysql_store"
+require 'spec_helper'
+require 'polipus/storage/mysql_store'
 
 describe Polipus::Storage::MysqlStore do
-  let(:test_db_name){'polipus_mysql_store_spec'}
+  let(:test_db_name) { 'polipus_mysql_store_spec' }
   let(:options) do
     {
       host: 'localhost',
@@ -13,27 +13,27 @@ describe Polipus::Storage::MysqlStore do
     }
   end
 
-  let(:my){
+  let(:my)do
     o = options.dup
     o.delete :database
     Mysql2::Client.new o
-  }
-  let(:db){Mysql2::Client.new options}
+  end
+  let(:db) { Mysql2::Client.new options }
 
-  let(:page){
-    Polipus::Page.new "http://www.google.com/", 
-      body: '<html></html>',
-      links: %w(http://www.a.com/ http://www.b.com/),
-      code: 201,
-      depth: 1,
-      referer: "http://www.a.com/1",
-      response_time: 1,
-      fetched: true,
-      fetched_at: Time.now,
-      error: 'an error'
-  }
+  let(:page)do
+    Polipus::Page.new 'http://www.google.com/',
+                      body: '<html></html>',
+                      links: %w(http://www.a.com/ http://www.b.com/),
+                      code: 201,
+                      depth: 1,
+                      referer: 'http://www.a.com/1',
+                      response_time: 1,
+                      fetched: true,
+                      fetched_at: Time.now,
+                      error: 'an error'
+  end
 
-  let(:storage){Polipus::Storage::MysqlStore.new(options)}
+  let(:storage) { Polipus::Storage::MysqlStore.new(options) }
 
   before(:each) do
     my.query("CREATE DATABASE IF NOT EXISTS #{test_db_name}")
@@ -43,7 +43,7 @@ describe Polipus::Storage::MysqlStore do
     my.query("DROP DATABASE #{test_db_name}")
   end
 
-  context 'CREATE' do 
+  context 'CREATE' do
     it 'should store a page' do
       page.user_data.a = 1
       storage.add(page).should eq Digest::MD5.hexdigest(page.url.to_s)
@@ -65,11 +65,11 @@ describe Polipus::Storage::MysqlStore do
     end
 
     it 'should empty the storage' do
-      2.times { |i|
+      2.times do |i|
         p = page.to_hash
         p['url'] = "#{p['url']}/#{i}"
         storage.add Polipus::Page.from_hash(p)
-      }
+      end
       filled_storage.count.should be 3
       filled_storage.clear
       filled_storage.count.should be 0
@@ -94,12 +94,12 @@ describe Polipus::Storage::MysqlStore do
       storage
     end
 
-    it 'should fetch a page' do 
+    it 'should fetch a page' do
       p = filled_storage.get page
       p.should_not be nil
       puts p
     end
 
   end
-  
+
 end

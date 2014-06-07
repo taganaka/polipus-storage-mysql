@@ -1,37 +1,36 @@
-require "polipus/storage"
-require "polipus/page"
-require "polipus/storage/mysql_store/version"
-require "mysql2"
+require 'polipus/storage'
+require 'polipus/page'
+require 'polipus/storage/mysql_store/version'
+require 'mysql2'
 module Polipus
   module Storage
     class MysqlStore < Base
-
       def initialize(options = {})
         @tbl = options.delete :table_name
         @my  = Mysql2::Client.new(options)
         setup
       end
 
-      def add page
+      def add(page)
         @my.query(page_to_sql(page))
         uuid(page)
       end
 
       def exists?(page)
         @my.query("SELECT
-          EXISTS (SELECT 1 FROM #{@tbl} 
+          EXISTS (SELECT 1 FROM #{@tbl}
             WHERE uuid = '#{@my.escape(uuid(page))}') AS CNT")
         .first['CNT'] == 1 ? true : false
       end
 
-      def get page
+      def get(page)
         load_page(
-          @my.query("SELECT * FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}' LIMIT 1", :cast_booleans => true)
+          @my.query("SELECT * FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}' LIMIT 1", cast_booleans: true)
         .first
         )
       end
 
-      def remove page
+      def remove(page)
         @my.query("DELETE FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}'")
       end
 
@@ -69,7 +68,7 @@ module Polipus
           @my.query(create_table)
         end
 
-        def page_to_sql (page)
+        def page_to_sql(page)
           %Q(
             INSERT INTO #{@tbl}
               VALUES (
@@ -93,7 +92,7 @@ module Polipus
           )
         end
 
-        def load_page hash
+        def load_page(hash)
           %w(links user_data).each do |f|
             hash[f] = Marshal.load(hash[f]) unless hash[f].nil?
           end

@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 require 'polipus/storage/mysql_store'
 

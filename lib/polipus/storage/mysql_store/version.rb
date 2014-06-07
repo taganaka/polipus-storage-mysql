@@ -1,3 +1,4 @@
+# coding: utf-8
 module Polipus
   module Storage
     class MysqlStore < Base

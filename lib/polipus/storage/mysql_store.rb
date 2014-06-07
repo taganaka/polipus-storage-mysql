@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'polipus/storage'
 require 'polipus/page'
 require 'polipus/storage/mysql_store/version'
@@ -20,7 +21,7 @@ module Polipus
         @my.query("SELECT
           EXISTS (SELECT 1 FROM #{@tbl}
             WHERE uuid = '#{@my.escape(uuid(page))}') AS CNT")
-        .first['CNT'] == 1 ? true : false
+        .first['CNT'] == 1
       end
 
       def get(page)

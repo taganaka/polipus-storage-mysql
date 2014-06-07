@@ -2,3 +2,12 @@ inherit_from: .rubocop_todo.yml
 
 Style/Documentation:
   Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/MethodLength:
+  Enabled: false
+
+Style/LineLength:
+  Enabled: false

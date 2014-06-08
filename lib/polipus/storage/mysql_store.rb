@@ -2,12 +2,18 @@
 require 'polipus/storage'
 require 'polipus/page'
 require 'mysql2'
+
 module Polipus
   module Storage
+    def self.mysql_store(mysql_options = {}, table_name = 'pages')
+      self::MysqlStore.new(mysql_options.merge(table_name: table_name))
+    end
+
     class MysqlStore < Base
       def initialize(options = {})
         @tbl = options.delete :table_name
         @my  = Mysql2::Client.new(options)
+
         setup
       end
 

@@ -2,6 +2,7 @@
 require 'polipus/storage'
 require 'polipus/page'
 require 'mysql2'
+require 'thread'
 
 module Polipus
   module Storage
@@ -13,35 +14,45 @@ module Polipus
       def initialize(options = {})
         @tbl = options.delete :table_name
         @my  = Mysql2::Client.new(options)
-
+        @mutex = Mutex.new
         setup
       end
 
       def add(page)
-        @my.query(page_to_sql(page))
-        uuid(page)
+        @mutex.synchronize do
+          @my.query(page_to_sql(page))
+          uuid(page)
+        end
       end
 
       def exists?(page)
-        @my.query("SELECT
-          EXISTS (SELECT 1 FROM #{@tbl}
-            WHERE uuid = '#{@my.escape(uuid(page))}') AS CNT")
-        .first['CNT'] == 1
+        @mutex.synchronize do
+          @my.query("SELECT
+            EXISTS (SELECT 1 FROM #{@tbl}
+              WHERE uuid = '#{@my.escape(uuid(page))}') AS CNT")
+          .first['CNT'] == 1
+        end
       end
 
       def get(page)
-        load_page(
-          @my.query("SELECT * FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}' LIMIT 1", cast_booleans: true)
-        .first
-        )
+        @mutex.synchronize do
+          load_page(
+           @my.query("SELECT * FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}' LIMIT 1", cast_booleans: true)
+          .first
+          )
+        end
       end
 
       def remove(page)
-        @my.query("DELETE FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}'")
+        @mutex.synchronize do
+          @my.query("DELETE FROM #{@tbl} WHERE uuid = '#{@my.escape(uuid(page))}'")
+        end
       end
 
       def count
-        @my.query("SELECT COUNT(*) AS CNT FROM #{@tbl}").first['CNT'].to_i
+        @mutex.synchronize do
+          @my.query("SELECT COUNT(*) AS CNT FROM #{@tbl}").first['CNT'].to_i
+        end
       end
 
       def each
@@ -51,7 +62,9 @@ module Polipus
       end
 
       def clear
-        @my.query("DELETE FROM #{@tbl}")
+        @mutex.synchronize do
+          @my.query("DELETE FROM #{@tbl}")
+        end
       end
 
       private

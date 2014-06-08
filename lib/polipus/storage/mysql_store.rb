@@ -40,7 +40,9 @@ module Polipus
       end
 
       def each
-        yield nil
+        @my.query("SELECT * FROM #{@tbl}").each do |row|
+          yield row['uuid'], load_page(row)
+        end
       end
 
       def clear

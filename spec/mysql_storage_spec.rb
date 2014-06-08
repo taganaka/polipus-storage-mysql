@@ -112,4 +112,18 @@ describe Polipus::Storage::MysqlStore do
 
   end
 
+  context 'CURSOR' do
+    it 'should iterate over pages' do
+      10.times do |i|
+        p = page.to_hash
+        p['url'] = "#{p['url']}/#{i}"
+        storage.add Polipus::Page.from_hash(p)
+      end
+      storage.count.should be 10
+      i = 0
+      storage.each { i += 1 }
+      expect(i).to be 10
+    end
+  end
+
 end

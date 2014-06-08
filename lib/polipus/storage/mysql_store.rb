@@ -1,7 +1,6 @@
 # coding: utf-8
 require 'polipus/storage'
 require 'polipus/page'
-require 'polipus/storage/mysql_store/version'
 require 'mysql2'
 module Polipus
   module Storage

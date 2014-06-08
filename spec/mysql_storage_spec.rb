@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'spec_helper'
+require 'polipus/storage'
 require 'polipus/storage/mysql_store'
 
 describe Polipus::Storage::MysqlStore do
@@ -39,7 +40,7 @@ describe Polipus::Storage::MysqlStore do
                       headers: { 'content-type' => ['text/html'] }
   end
 
-  let(:storage) { Polipus::Storage::MysqlStore.new(options) }
+  let(:storage) { Polipus::Storage::mysql_store(options, options[:table_name]) }
 
   before(:each) do
     my.query("CREATE DATABASE IF NOT EXISTS #{test_db_name}")

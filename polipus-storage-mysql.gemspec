@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'polipus/storage/mysql_store/version'
+
 
 Gem::Specification.new do |spec|
   spec.name          = 'polipus-storage-mysql'
-  spec.version       = Polipus::Storage::MysqlStore::VERSION
+  spec.version       = '0.0.1'
   spec.authors       = ['Francesco Laurita']
   spec.email         = ['francesco.laurita@gmail.com']
   spec.summary       = %q(TODO: Write a short summary. Required.)

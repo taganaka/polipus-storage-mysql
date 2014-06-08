@@ -1,6 +1,6 @@
 # Polipus::Storage::Mysql
 
-TODO: Write a gem description
+MySQL Storage driver for [Polipus::Crawler](https://github.com/taganaka/polipus)
 
 ## Installation
 
@@ -18,7 +18,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'polipus'
+require 'polipus/storage/mysql_store'
+mysql_storage = Polipus::Storage::mysql_store(mysql_options, table_name)
+Polipus.crawler('rubygems','http://rubygems.org/', storage: mysql_store) do |crawler|
+  # In-place page processing
+  crawler.on_page_downloaded do |page|
+    # A nokogiri object
+    puts "Page title: '#{page.doc.css('title').text}' Page url: #{page.url}"
+  end
+end
+```
+
+## MySQL options
+
+MySQL options are passed directly to the mysql2 driver: (https://github.com/brianmario/mysql2)
 
 ## Contributing
 

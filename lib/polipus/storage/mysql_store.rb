@@ -36,7 +36,7 @@ module Polipus
       end
 
       def count
-        @my.query("SELECT COUNT(*) AS CNT FROM #{@tbl}").first['CNT']
+        @my.query("SELECT COUNT(*) AS CNT FROM #{@tbl}").first['CNT'].to_i
       end
 
       def each

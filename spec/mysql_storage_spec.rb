@@ -23,15 +23,20 @@ describe Polipus::Storage::MysqlStore do
 
   let(:page)do
     Polipus::Page.new 'http://www.google.com/',
-                      body: '<html></html>',
-                      links: %w(http://www.a.com/ http://www.b.com/),
+                      body: '<html>
+                        <body>
+                          <a href="/a/1">1</a>
+                          <a href="/a/2">2</a>
+                        </body>
+                      </html>',
                       code: 201,
                       depth: 1,
-                      referer: 'http://www.a.com/1',
+                      referer: 'http://www.google.com/1',
                       response_time: 1,
                       fetched: true,
                       fetched_at: Time.now,
-                      error: 'an error'
+                      error: 'an error',
+                      headers: { 'content-type' => ['text/html'] }
   end
 
   let(:storage) { Polipus::Storage::MysqlStore.new(options) }
@@ -97,8 +102,12 @@ describe Polipus::Storage::MysqlStore do
 
     it 'should fetch a page' do
       p = filled_storage.get page
-      p.should_not be nil
-      puts p
+      expect(p).to_not be nil
+      expect(p).to be_a Polipus::Page
+      expect(p.url.to_s).to eq 'http://www.google.com/'
+      expect(p.links.count).to be 2
+      expect(p.headers['content-type']).to eq ['text/html']
+      expect(p.fetched_at).to be > 0
     end
 
   end
